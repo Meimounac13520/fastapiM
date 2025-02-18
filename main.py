@@ -1,15 +1,18 @@
-from fastapi import FastAPI, Header, HTTPException, Request
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
-from models.auth import TokenResponse
-from utils.auth import decode_basic_auth, generate_token
 from models.topup import TopupRequest, TopupResponse
 from services.token_service import TokenService
 import aiohttp
 from models.package import PackageActivationRequest, PackageActivationResponse
 # Add to existing imports
 from models.balance import BalanceRequest, BalanceResponse
-
+from fastapi import FastAPI, HTTPException
+import httpx
+import base64
+BASE_URL = "https://192.168.102.3/gettoken"  # Placeholder for the actual URL
+CREDENTIALS = "samartapi:samartapi"
+ENCODED_CREDENTIALS = base64.b64encode(CREDENTIALS.encode()).decode()
+AUTH_HEADER = {"Authorization": f"Basic {ENCODED_CREDENTIALS}"}
 app = FastAPI(
     title="Authentication API",
     description="""
@@ -25,19 +28,6 @@ app = FastAPI(
         "email": "support@example.com"
     },
 )
-
-from fastapi import FastAPI, HTTPException
-import httpx
-import base64
-
-app = FastAPI()
-
-BASE_URL = "https://192.168.102.3/gettoken"  # Placeholder for the actual URL
-CREDENTIALS = "samartapi:samartapi"
-ENCODED_CREDENTIALS = base64.b64encode(CREDENTIALS.encode()).decode()
-AUTH_HEADER = {"Authorization": f"Basic {ENCODED_CREDENTIALS}"}
-
-
 @app.post("/gettoken")
 async def get_token():
     async with httpx.AsyncClient() as client:
