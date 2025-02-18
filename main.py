@@ -177,7 +177,7 @@ async def topup(request: TopupRequest):
     # Call topup API
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "http://end_point_url/topup",
+            "https://192.168.102.3/evc2/topup",
             headers={"Authorization": token},
             json=request.dict(exclude_none=True)
         ) as response:
@@ -259,7 +259,7 @@ async def activate_package(request: PackageActivationRequest):
     # Call package activation API
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "http://end_point_url/package-activation",
+            "https://192.168.102.3/evc2/package-activation",
             headers={"Authorization": token},
             json=request.dict(exclude_none=True)
         ) as response:
@@ -361,7 +361,7 @@ async def query_balance(request: BalanceRequest):
     # Call balance query API
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "http://end_point_url/query-balance",
+            "https://192.168.102.3/evc2/query-balance",
             headers={"Authorization": token},
             json=request.dict()
         ) as response:
