@@ -26,78 +26,31 @@ app = FastAPI(
     },
 )
 
-@app.post(
-    "/gettoken",
-    response_model=TokenResponse,
-    tags=["authentication"],
-    summary="Get authentication token",
-    responses={
-        200: {
-            "description": "Successful token generation",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "success": True,
-                        "token": "b33d87767ed06a1c4b4bcdaaec6142d6",
-                        "errorcode": "0"
-                    }
-                }
-            }
-        },
-        401: {
-            "description": "Authentication failed",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "detail": "Invalid credentials"
-                    }
-                }
-            }
-        }
-    }
-)
-async def get_token(
-    request: Request,
-    authorization: str = Header(
-        None,
-        description="Basic authentication header. Format: 'Basic base64(username:password)'",
-        example="Basic dGVzdDpteXBhc3M="
-    )
-):
-    """
-    Generate an authentication token using Basic Authentication.
-    
-    ## Authentication
-    * Requires Basic Authentication header with base64 encoded username:password
-    * Example: `Basic dGVzdDpteXBhc3M=` (for test:mypass)
-    
-    ## Response
-    Returns a JSON object containing:
-    * success: boolean indicating success
-    * token: the generated token
-    * errorcode: "0" for success
-    """
-    if not authorization or not authorization.startswith('Basic '):
-        raise HTTPException(status_code=401, detail="Basic authentication required")
+from fastapi import FastAPI, HTTPException
+import httpx
+import base64
 
-    # Get client IP
-    client_ip = request.client.host
-    
-    # Decode credentials
-    username, password = decode_basic_auth(authorization)
-    
-    # In real application, verify credentials against database
-    if username != "test" or password != "mypass":
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    # Generate token
-    token = generate_token(username, client_ip)
-    
-    return TokenResponse(
-        success=True,
-        token=token,
-        errorcode="0"
-    )
+app = FastAPI()
+
+BASE_URL = "https://192.168.102.3/gettoken"  # Placeholder for the actual URL
+CREDENTIALS = "samartapi:samartapi"
+ENCODED_CREDENTIALS = base64.b64encode(CREDENTIALS.encode()).decode()
+AUTH_HEADER = {"Authorization": f"Basic {ENCODED_CREDENTIALS}"}
+
+
+@app.post("/gettoken")
+async def get_token():
+    async with httpx.AsyncClient() as client:
+        response = await client.post(BASE_URL, headers=AUTH_HEADER)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("success"):
+                return {"token": data.get("token")}
+            else:
+                raise HTTPException(status_code=400, detail="Failed to retrieve token")
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Error from token service")
+
 
 # Initialize token service
 token_service = TokenService()
