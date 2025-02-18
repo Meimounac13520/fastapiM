@@ -9,7 +9,7 @@ from models.balance import BalanceRequest, BalanceResponse
 from fastapi import FastAPI, HTTPException
 import httpx
 import base64
-BASE_URL = "https://192.168.102.3/gettoken"  # Placeholder for the actual URL
+BASE_URL = "https://192.168.102.3:443/gettoken"  # Placeholder for the actual URL
 CREDENTIALS = "samartapi:samartapi"
 ENCODED_CREDENTIALS = base64.b64encode(CREDENTIALS.encode()).decode()
 AUTH_HEADER = {"Authorization": f"Basic {ENCODED_CREDENTIALS}"}
@@ -120,7 +120,7 @@ async def topup(request: TopupRequest):
     # Call topup API
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://192.168.102.3/evc2/topup",
+            "https://192.168.102.3:443/evc2/topup",
             headers={"Authorization": token},
             json=request.dict(exclude_none=True)
         ) as response:
@@ -202,7 +202,7 @@ async def activate_package(request: PackageActivationRequest):
     # Call package activation API
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://192.168.102.3/evc2/package-activation",
+            "https://192.168.102.3:443/evc2/package-activation",
             headers={"Authorization": token},
             json=request.dict(exclude_none=True)
         ) as response:
@@ -304,7 +304,7 @@ async def query_balance(request: BalanceRequest):
     # Call balance query API
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://192.168.102.3/evc2/query-balance",
+            "https://192.168.102.3:443/evc2/query-balance",
             headers={"Authorization": token},
             json=request.dict()
         ) as response:
