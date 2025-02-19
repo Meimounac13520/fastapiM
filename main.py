@@ -313,6 +313,7 @@ async def query_balance(request: BalanceRequest):
             headers={"Authorization": token},
             json=request.dict()
         ) as response:
+            print("token",token)
             if response.status == 200:
                 data = await response.json()
                 return BalanceResponse(
