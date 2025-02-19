@@ -34,9 +34,10 @@ class TokenService:
                                 self._token = data.get("token")
                                 return self._token
                             else:
+                                
                                 logging.error("Failed to fetch token: %s", data.get("errorcode"))
                         else:
-                            logging.error("HTTP error occurred: %s", response.status)
+                            logging.error("HTTP error jiiiioccurred: %s", response.status)
             except Exception as e:
                 logging.exception("Exception occurred while fetching token: %s", e)
             return None
