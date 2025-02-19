@@ -25,7 +25,7 @@ class TokenService:
             try:
                 async with aiohttp.ClientSession() as session:
                     async with session.post(
-                        f"{self._base_url}/gettoken",
+                        "https://www.chinguitel.mr/evc2/gettoken",
                         headers={"Authorization": auth_header}
                     ) as response:
                         if response.status == 200:

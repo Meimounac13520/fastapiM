@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException
 import httpx
 import base64
 # https://www.chinguitel.mr/
-BASE_URL = "https://www.chinguitel.mr/gettoken"  # Placeholder for the actual URL
+BASE_URL = "https://www.chinguitel.mr/evc2/gettoken"  # Placeholder for the actual URL
 CREDENTIALS = "samartapi:samartapi"
 ENCODED_CREDENTIALS = base64.b64encode(CREDENTIALS.encode()).decode()
 AUTH_HEADER = {"Authorization": f"Basic {ENCODED_CREDENTIALS}"}
@@ -29,10 +29,11 @@ app = FastAPI(
         "email": "support@example.com"
     },
 )
-@app.post("/gettoken")
+@app.get("/gettoken")
 async def get_token():
     async with httpx.AsyncClient() as client:
-        response = await client.post(BASE_URL, headers=AUTH_HEADER)
+        print("get_token----------------------------------")
+        response = await client.post('https://www.chinguitel.mr/evc2/gettoken', headers=AUTH_HEADER)
         if response.status_code == 200:
             data = response.json()
             if data.get("success"):
@@ -108,6 +109,7 @@ async def topup(request: TopupRequest):
     * 72 = operation is not permitted
     * 99 = Unknown error
     """
+    print("get_token----------------------------------")
     # Get valid token
     token = await token_service.get_valid_token()
     if not token:
