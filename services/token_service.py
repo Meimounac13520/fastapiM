@@ -7,7 +7,7 @@ import json
 class TokenService:
     def __init__(self):
         self._token = None
-        self._base_url = "https://192.168.102.3:443"
+        self._base_url = "https://www.chinguitel.mr"
 
     async def get_valid_token(self) -> Optional[str]:
         # In real application, get token from DB
