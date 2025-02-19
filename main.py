@@ -35,7 +35,7 @@ async def get_token():
         print("get_token----------------------------------")
         response = await client.post('https://www.chinguitel.mr/evc2/gettoken', headers=AUTH_HEADER)
         if response.status_code == 200:
-            print("get_token----------------------------------")
+            print("get_token--------------response.status_code--------------------",response.status_code)
             data = response.json()
             if data.get("success"):
                 return {"token": data.get("token")}
