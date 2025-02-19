@@ -28,7 +28,7 @@ class TokenService:
                         "https://www.chinguitel.mr/evc2/gettoken",
                         headers={"Authorization": auth_header}
                     ) as response:
-                         print("_fetch_new_token--------------_fetch_new_token.json()--------------------",response.json())
+                        print("_fetch_new_token--------------_fetch_new_token.json()--------------------",response.json())
                         if response.status == 200:
                             data = await response.json()
                             if data.get("success"):
