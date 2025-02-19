@@ -313,10 +313,18 @@ async def query_balance(request: BalanceRequest):
             headers={"Authorization": token},
             json=request.dict()
         ) as response:
-            data = await response.json()
-            return BalanceResponse(
-                success=data.get("success", False),
-                message=data.get("message", "Unknown error"),
-                errorcode=str(data.get("errorcode", "99")),
-                balance=float(data.get("balance", 0))
-            )
+            if response.status == 200:
+                data = await response.json()
+                return BalanceResponse(
+                    success=data.get("success", False),
+                    message=data.get("message", "Unknown error"),
+                    errorcode=str(data.get("errorcode", "99")),
+                    balance=float(data.get("balance", 0))
+                )
+            else:
+                return BalanceResponse(
+                    success=False,
+                    message="Connection error",
+                    errorcode="500",
+                    balance=0
+                )
