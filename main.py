@@ -195,23 +195,30 @@ async def activate_package(request: PackageActivationRequest):
     * 999 = Unspecified error
     """
     # Get valid token
-    token = await token_service.get_valid_token()
-    if not token:
-        return PackageActivationResponse(
-            success=False,
-            message="Failed to obtain authentication token",
-            errorcode="500",
-            system_transaction_id=0
-        )
+    # token = await token_service.get_valid_token()
+    # if not token:
+    #     return PackageActivationResponse(
+    #         success=False,
+    #         message="Failed to obtain authentication token",
+    #         errorcode="500",
+    #         system_transaction_id=0
+    #     )
 
     # Call package activation API
     async with aiohttp.ClientSession() as session:
         async with session.post(
             "https://www.chinguitel.mr/evc2/package-activation",
-            headers={"Authorization": token},
+            # headers={"Authorization": token},
+            headers=AUTH_HEADER,
             json=request.dict(exclude_none=True)
         ) as response:
+            print("=============activate_package=====================")
+            print("response: ",response)
+            print("===============activate_package===================")
             data = await response.json()
+            print("===============activate_package===================")
+            print("data: ",data)
+            print("=============activate_package=====================")
             return PackageActivationResponse(
                 success=data.get("success", False),
                 message=data.get("message", "Unknown error"),
