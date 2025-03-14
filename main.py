@@ -126,7 +126,8 @@ async def topup(request: TopupRequest):
     async with aiohttp.ClientSession() as session:
         async with session.post(
             "https://www.chinguitel.mr/evc2/topup",
-            headers={"Authorization": token},
+            # headers={"Authorization": token},
+             headers=AUTH_HEADER,
             json=request.dict(exclude_none=True)
         ) as response:
             data = await response.json()
@@ -304,23 +305,24 @@ async def query_balance(request: BalanceRequest):
     * 99 = Unknown error
     """
     # Get valid token
-    token = await token_service.get_valid_token()
-    if not token:
-        return BalanceResponse(
-            success=False,
-            message="Failed to obtain authentication token",
-            errorcode="500",
-            balance=0
-        )
+    # token = await token_service.get_valid_token()
+    # if not token:
+    #     return BalanceResponse(
+    #         success=False,
+    #         message="Failed to obtain authentication token",
+    #         errorcode="500",
+    #         balance=0
+    #     )
 
     # Call balance query API
     async with aiohttp.ClientSession() as session:
         async with session.post(
             "https://www.chinguitel.mr/evc2/query-balance",
-            headers={"Authorization": token},
+            # headers={"Authorization": token},
+             headers=AUTH_HEADER,
             json=request.dict()
         ) as response:
-            print("token",token)
+            # print("token",token)
             if response.status == 200:
                 data = await response.json()
                 return BalanceResponse(
